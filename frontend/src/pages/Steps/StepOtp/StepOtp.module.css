@@ -1,0 +1,11 @@
+.cardWrapper {
+  composes: cardWrapper from "../../../app.module.css";
+}
+
+.bottomPara {
+  composes: bottomPara from "../StepPhoneEmail/StepPhoneEmail.module.css";
+}
+
+.actionButtonWrap {   
+  composes: bottomPara from "../StepPhoneEmail/StepPhoneEmail.module.css";
+}
