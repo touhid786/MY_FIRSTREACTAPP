@@ -3,19 +3,34 @@ import { Button } from "../../../../components/shared/Button/Button";
 import Card from "../../../../components/shared/Card/Card";
 import TextInput from "../../../../components/shared/TextInput/TextInput";
 import styles from "../StepPhoneEmail.module.css";
+import { sendOtp } from "../../../../http";
 
-const Phone = ({onNext}) => {
+const Phone = ({ onNext }) => {
   const [phoneNumber, setPhoneNumber] = React.useState("");
 
+  const submit = async () => {
+    //SERVER REQUEQT FOR OTP
+    try {
+      const res = await sendOtp({ phoneNumber });
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  console.log(phoneNumber);
   return (
     <Card title="Enter you phone number" icon="phone">
-      <TextInput value={" "} onChange={()=>setPhoneNumber()} />
+      <TextInput
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+      />
 
       <div>
-      <div className={styles.buttonActionWrap}>
-      <Button text="Next" onClick={onNext}/>
-      </div>
-      <p className={styles.bottomPara}>
+        <div className={styles.buttonActionWrap}>
+          <Button text="Next" onClick={submit} />
+        </div>
+        <p className={styles.bottomPara}>
           By entering your number, you’re agreeing to our Terms of Service and
           Privacy Policy. Thanks!
         </p>

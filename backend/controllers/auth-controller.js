@@ -5,8 +5,9 @@ const TokenService = require("../services/token-service");
 
 class AuthController {
   async sendOtp(req, res) {
-    const { phone } = req.body;
-    if (!phone) {
+    const { phoneNumber } = req.body;
+    if (!phoneNumber) {
+      console.log(req.body);
       return res.status(400).json({
         message: "Phone number is required",
       });
@@ -18,16 +19,17 @@ class AuthController {
     //GENERATING HASH
     const ttl = 1000 * 60 * 2; //2 minutes
     const expires = Date.now() + ttl;
-    const data = `${phone}.${expires}.${otp}`;
+    const data = `${phoneNumber}.${expires}.${otp}`;
     const hash = HashService.hashOtp(data);
 
     //SENDING OTP
     try {
-      await OtpService.sendBySms(phone, otp);
+      //await OtpService.sendBySms(phone, otp);
       return res.json({
         message: "OTP sent successfully",
         hash: `${hash}.${expires}`,
-        phone,
+        phoneNumber,
+        otp,
       });
     } catch (e) {
       console.log(e);
@@ -69,15 +71,16 @@ class AuthController {
     }
 
     // TOKEN GENERATION
-    const { accessToken, refreshToken } = TokenService.generateTokens({_id:user._id,activated:false});
-    res.cookie("refreshToken", {
+    const { accessToken, refreshToken } = TokenService.generateTokens({
+      _id: user._id,
+      activated: false,
+    });
+    res.cookie("refreshToken", refreshToken, {
       maxAge: 1000 * 60 * 60 * 24 * 30,
-      httpOnly : true,
+      httpOnly: true,
     });
 
-    return res.json({accessToken})
-
-
+    return res.json({ accessToken });
   }
 }
 

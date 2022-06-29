@@ -1,12 +1,19 @@
 require("dotenv").config();
 
 const express = require("express");
-const router=require("./routes")
+const router = require("./routes");
 const app = express();
-const DbConnect= require("./database"); 
+
+const cors = require("cors");
+const corsOptions = {
+  origin: ["http://localhost:3000"],
+};
+app.use(cors(corsOptions));
+
+const DbConnect = require("./database");
 const PORT = process.env.PORT;
 DbConnect();
-app.use(express.json())
+app.use(express.json());
 app.use(router);
 
 app.get("/", (req, res) => {
@@ -16,5 +23,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
