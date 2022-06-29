@@ -4,21 +4,24 @@ import Card from "../../../../components/shared/Card/Card";
 import TextInput from "../../../../components/shared/TextInput/TextInput";
 import styles from "../StepPhoneEmail.module.css";
 import { sendOtp } from "../../../../http";
+import { useDispatch } from "react-redux";
 
 const Phone = ({ onNext }) => {
   const [phoneNumber, setPhoneNumber] = React.useState("");
+  const dispatch = useDispatch();
 
   const submit = async () => {
     //SERVER REQUEQT FOR OTP
     try {
-      const res = await sendOtp({ phoneNumber });
-      console.log(res);
+      const { data } = await sendOtp({ phoneNumber });
+      console.log(data);
+      onNext();
     } catch (e) {
       console.log(e);
     }
   };
 
-  console.log(phoneNumber);
+ 
   return (
     <Card title="Enter you phone number" icon="phone">
       <TextInput
