@@ -2,12 +2,12 @@ const OtpService = require("../services/otp-service");
 const HashService = require("../services/hash-service");
 const UserService = require("../services/user-service");
 const TokenService = require("../services/token-service");
+const UserDto = require("../dtos/user-dto");
 
 class AuthController {
   async sendOtp(req, res) {
-    const { phoneNumber } = req.body;
-    if (!phoneNumber) {
-      console.log(req.body);
+    const { phone } = req.body;
+    if (!phone) {
       return res.status(400).json({
         message: "Phone number is required",
       });
@@ -19,7 +19,7 @@ class AuthController {
     //GENERATING HASH
     const ttl = 1000 * 60 * 2; //2 minutes
     const expires = Date.now() + ttl;
-    const data = `${phoneNumber}.${expires}.${otp}`;
+    const data = `${phone}.${expires}.${otp}`;
     const hash = HashService.hashOtp(data);
 
     //SENDING OTP
@@ -28,8 +28,8 @@ class AuthController {
       return res.json({
         message: "OTP sent successfully",
         hash: `${hash}.${expires}`,
-        phoneNumber,
-        otp,
+        phone,
+        otp
       });
     } catch (e) {
       console.log(e);
@@ -65,22 +65,22 @@ class AuthController {
       if (!user) {
         user = await UserService.createUser({ phone });
       }
-    } catch (err) {
+    } catch (err) {   
       console.log(err);
       return res.status(500).json({ message: "Db error" });
     }
 
     // TOKEN GENERATION
-    const { accessToken, refreshToken } = TokenService.generateTokens({
-      _id: user._id,
-      activated: false,
-    });
-    res.cookie("refreshToken", refreshToken, {
+    const { accessToken, refreshToken } = TokenService.generateTokens({_id:user._id,activated:false});
+    res.cookie("refreshToken", refreshToken,{
       maxAge: 1000 * 60 * 60 * 24 * 30,
-      httpOnly: true,
+      httpOnly : true,
     });
 
-    return res.json({ accessToken });
+    const userDto=new UserDto(user);
+    return res.json({accessToken,user:userDto});
+
+
   }
 }
 

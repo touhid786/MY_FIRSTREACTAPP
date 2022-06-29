@@ -22,10 +22,8 @@ import SemiProtected from "./Routes/SemiProtected/SemiProtected";
 import ProctectedRoute from "./Routes/ProtectedRoute/ProctectedRoute";
 
 function App() {
-  // const { isAuthenticated } = useSelector((state) => state.auth);
-  // const { isActivated } = useSelector((state) => state.activate);
-
-  const isAuthenticated = false;
+  
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const isActivated = false;
 
   return (

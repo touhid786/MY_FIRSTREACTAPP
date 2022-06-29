@@ -13,10 +13,15 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuthentication: (state, action) => {},
+    setAuthentication: (state, action) => {
+     //console.log(action);
+     state.user= action.payload;
+     state.isAuthenticated = true;
+
+    },
     setOtp: (state, action) => {
-      const { phoneNumber, hash } = action.payload;
-      state.otp.phone = phoneNumber;
+      const { phone, hash } = action.payload;
+      state.otp.phone = phone;
       state.otp.hash = hash;
     },
   },

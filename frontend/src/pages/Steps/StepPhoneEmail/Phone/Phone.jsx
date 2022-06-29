@@ -14,11 +14,10 @@ const Phone = ({ onNext }) => {
   const submit = async () => {
     //SERVER REQUEQT FOR OTP
     try {
-      const {data} = await sendOtp({ phoneNumber });
+      const { data } = await sendOtp({ phone: phoneNumber });
       console.log(data);
-      // console.log(data.phoneNumber);
-      // console.log(data.hash);
-      dispatch(setOtp({phoneNumber: data.phoneNumber, hash: data.hash}));
+      //console.log(data.phone, data.hash);
+      dispatch(setOtp({ phone: data.phone, hash: data.hash }));
       onNext();
     } catch (e) {
       console.log(e);
