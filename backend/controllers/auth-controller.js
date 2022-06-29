@@ -3,6 +3,7 @@ const HashService = require("../services/hash-service");
 const UserService = require("../services/user-service");
 const TokenService = require("../services/token-service");
 const UserDto = require("../dtos/user-dto");
+const tokenService = require("../services/token-service");
 
 class AuthController {
   async sendOtp(req, res) {
@@ -72,13 +73,27 @@ class AuthController {
 
     // TOKEN GENERATION
     const { accessToken, refreshToken } = TokenService.generateTokens({_id:user._id,activated:false});
+    
+     
+    await tokenService.storeRefreshToken(refreshToken, user._id);
+    
+    
+    
     res.cookie("refreshToken", refreshToken,{
       maxAge: 1000 * 60 * 60 * 24 * 30,
       httpOnly : true,
     });
 
+    res.cookie("accessToken", accessToken,{
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      httpOnly : true,
+    });
+
+
+
+
     const userDto=new UserDto(user);
-    return res.json({accessToken,user:userDto});
+    return res.json({user:userDto,auth:true});
 
 
   }
