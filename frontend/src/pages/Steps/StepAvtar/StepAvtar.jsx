@@ -6,7 +6,7 @@ import styles from "./StepAvtar.module.css";
 import { useDispatch } from "react-redux";
 import { setAvtar } from "../../../Redux/Reducers/activateSlice";
 import { activate } from "../../../http";
-
+import { setAuthentication} from "../../../Redux/Reducers/authSlice"
 const StepAvtar = ({ onNext }) => {
   const [image, setImage] = useState("/images/userImage.png");
   const { name, avtar } = useSelector((state) => state.activate);
@@ -22,6 +22,24 @@ const StepAvtar = ({ onNext }) => {
       setImage(reader.result);
       dispatch(setAvtar(reader.result));
     };
+  };
+
+  const submit = async () => {
+    //console.log("submit method called");
+    try {
+      //console.log(name, avtar);
+      const { data } = await activate({ name, avtar });
+            //console.log(data);
+       //console.log(data.auth);
+      
+      if(data.auth){
+        dispatch(setAuthentication(data.user))
+        
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -43,7 +61,7 @@ const StepAvtar = ({ onNext }) => {
           </label>
         </div>
         <div>
-          <Button text="Next" />
+          <Button text="Next" onClick={submit} />
         </div>
       </Card>
     </>

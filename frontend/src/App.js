@@ -22,9 +22,8 @@ import SemiProtected from "./Routes/SemiProtected/SemiProtected";
 import ProctectedRoute from "./Routes/ProtectedRoute/ProctectedRoute";
 
 function App() {
-  
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const isActivated = false;
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { activated } = user;
 
   return (
     <BrowserRouter>
@@ -47,7 +46,7 @@ function App() {
           element={
             <SemiProtected
               isAuthenticated={isAuthenticated}
-              isActivated={isActivated}
+              isActivated={activated}
             >
               <Activate />
             </SemiProtected>
@@ -59,7 +58,7 @@ function App() {
           element={
             <ProctectedRoute
               isAuthenticated={isAuthenticated}
-              isActivated={isActivated}
+              isActivated={activated}
             >
               <Rooms />
             </ProctectedRoute>
